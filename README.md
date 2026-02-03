@@ -106,6 +106,10 @@ on-chain-sentry/
 └── README.md
 ```
 
+## Development
+
+Run tests and build: `npm run build && node dist/index.js` (no tsx required). Use `npm run watch` for development with auto-reload.
+
 ## Troubleshooting
 
 - **Alerts not arriving**: Ensure `OPENCLAW_ALERT_TARGET` is set and the OpenClaw gateway is running (`openclaw gateway`). For webhook testing, use `ALERT_WEBHOOK_URL` with a Discord or Slack webhook.
