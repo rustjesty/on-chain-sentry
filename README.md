@@ -37,7 +37,7 @@ You should see:
 [sentry] On-Chain Sentry started
 [sentry] OpenClaw target: set
 [sentry] Solana RPC: https://api.devnet.solana.com
-[sentry] Ethereum RPC: https://eth.llamarpc.com   # only if RPC_URL_ETH is set
+[sentry] Ethereum RPC: https://eth.llamarpc.com   # only if RPC_URL_ETH is set (or set ETH_CHAIN_NAME for Base/Arbitrum/etc.)
 [sentry] Watching address: <your WATCH_ADDRESS>
 ```
 
@@ -51,8 +51,10 @@ If OpenClaw or webhook is set, a startup ping is sent. New activity (or slot jum
 | `RPC_URL` | Solana RPC URL. Default: `https://api.devnet.solana.com`. Use a mainnet RPC (e.g. Helius) for production. |
 | `WATCH_ADDRESS` | Optional. Solana public key to watch; every tx touching it is alerted. |
 | `SLOT_JUMP_THRESHOLD` | Alert when Solana slot advances by more than this (default: 20). |
+| `SOLSCAN_CLUSTER` | Optional. Makes Solscan links match your cluster: `devnet`, `testnet`, or omit for mainnet. |
 | **Ethereum (EVM)** | Set `RPC_URL_ETH` to enable. |
 | `RPC_URL_ETH` | Ethereum/EVM RPC URL (e.g. `https://eth.llamarpc.com`, `https://mainnet.base.org`). Omit to disable Ethereum. |
+| `ETH_CHAIN_NAME` | Optional. Label used in logs/alerts (e.g. `Base`, `Arbitrum`, `Ethereum`). |
 | `WATCH_ADDRESS_ETH` | Optional. Ethereum address (0x...) to watch; every in/out tx is alerted. |
 | `ETH_EXPLORER_TX` | Block explorer tx URL (default: `https://etherscan.io/tx`). Use `https://basescan.org/tx` for Base, etc. |
 | `ETH_EXPLORER_BLOCK` | Block explorer block URL (default: `https://etherscan.io/block`). |
@@ -61,6 +63,7 @@ If OpenClaw or webhook is set, a startup ping is sent. New activity (or slot jum
 | `OPENCLAW_ALERT_TARGET` | OpenClaw recipient (e.g. Telegram chat id). Required for delivery to OpenClaw channels. |
 | `ALERT_WEBHOOK_URL` | Optional. Discord or Slack webhook URL for testing without OpenClaw. |
 | `POLL_INTERVAL_MS` | Poll interval in ms for all chains (default: 15000). |
+| `NOTIFY_TIMEOUT_MS` | Optional. Timeout (ms) for OpenClaw CLI + webhook requests (default: 15000). |
 
 ## OpenClaw integration
 
