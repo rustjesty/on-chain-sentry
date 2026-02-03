@@ -7,6 +7,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
+const NOTIFY_TIMEOUT_MS = Number(process.env.NOTIFY_TIMEOUT_MS) || 15_000;
 
 export interface Alert {
   title: string;
@@ -38,7 +39,7 @@ export async function sendViaOpenClaw(alert: Alert): Promise<boolean> {
   const cmd = `openclaw message send --target "${target}" --message '${escaped}'`;
 
   try {
-    const { stderr } = await execAsync(cmd, { timeout: 15_000 });
+    const { stderr } = await execAsync(cmd, { timeout: NOTIFY_TIMEOUT_MS });
     if (stderr) console.warn("[openclaw] stderr:", stderr);
     return true;
   } catch (err) {
@@ -60,17 +61,23 @@ export async function sendViaWebhook(alert: Alert): Promise<boolean> {
     username: "On-Chain Sentry",
   });
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), NOTIFY_TIMEOUT_MS);
+
   try {
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,
+      signal: controller.signal,
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return true;
   } catch (err) {
     console.error("[webhook] send failed:", err);
     return false;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
