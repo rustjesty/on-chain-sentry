@@ -6,6 +6,7 @@
 
 import { Connection, PublicKey } from "@solana/web3.js";
 import { sendAlert } from "./notify.js";
+import { solscanBlockUrl, solscanTxUrl } from "./explorers.js";
 
 const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15_000;
 const SLOT_JUMP_THRESHOLD = Number(process.env.SLOT_JUMP_THRESHOLD) || 20;
@@ -49,7 +50,7 @@ async function watchAddressActivity(connection: Connection, address: string): Pr
         title: "Activity on watched address",
         body: `Signature: \`${sig.signature.slice(0, 16)}...\`\nSlot: ${slot}\nTime: ${blockTime}${err ? `\nStatus: failed` : ""}`,
         severity: err ? "warning" : "info",
-        link: `https://solscan.io/tx/${sig.signature}`,
+        link: solscanTxUrl(sig.signature),
       });
     } catch (e) {
       console.error("[sentry] poll error:", e);
@@ -80,7 +81,7 @@ async function watchSlotAndActivity(connection: Connection): Promise<void> {
           title: "Slot jump",
           body: `Slot advanced by ${delta} (${lastSlot - delta} → ${slot}). Possible chain catch-up or reorg.`,
           severity: "info",
-          link: `https://solscan.io/block/${slot}`,
+          link: solscanBlockUrl(slot),
         });
       }
     } catch (e) {
