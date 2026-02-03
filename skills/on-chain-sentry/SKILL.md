@@ -40,7 +40,7 @@ The sentry runs as a long-lived process. Alerts appear in the channel configured
 
 - "What is the on-chain sentry?"
 - "How do I add a watched address (Solana or Ethereum)?"
-- "How do I watch Base or Arbitrum?"
+- "How do I watch Base or Arbitrum?" (Set `RPC_URL_ETH=https://mainnet.base.org` and `ETH_EXPLORER_TX=https://basescan.org/tx`.)
 - "Why did I get a slot/block jump alert?"
 - "How do I run the sentry in the background?"
 
