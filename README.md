@@ -106,6 +106,11 @@ on-chain-sentry/
 └── README.md
 ```
 
+## Troubleshooting
+
+- **Alerts not arriving**: Ensure `OPENCLAW_ALERT_TARGET` is set and the OpenClaw gateway is running (`openclaw gateway`). For webhook testing, use `ALERT_WEBHOOK_URL` with a Discord or Slack webhook.
+- **RPC rate limits**: Increase `POLL_INTERVAL_MS` (e.g. 30000) or use a paid RPC provider for production.
+
 ## License
 
 MIT.
