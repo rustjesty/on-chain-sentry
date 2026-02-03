@@ -1,0 +1,22 @@
+{
+  "name": "on-chain-sentry",
+  "version": "1.0.0",
+  "description": "OpenClaw on-chain sentry: watch Solana and alert via OpenClaw (WhatsApp, Telegram, etc.)",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/index.ts",
+    "watch": "tsx watch src/index.ts",
+    "sentinel": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
