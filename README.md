@@ -1,12 +1,16 @@
 # On-Chain Sentry (OpenClaw example)
 
-A **working example project** that uses [OpenClaw](https://docs.clawd.bot/) to send **Solana on-chain alerts** to your chat (WhatsApp, Telegram, Discord, etc.).
+A **working example project** that uses [OpenClaw](https://docs.clawd.bot/) to send **multi-chain on-chain alerts** (Solana + Ethereum/EVM) to your chat (WhatsApp, Telegram, Discord, etc.).
 
 ## What it does
 
 - **Watches Solana**:
   - **Address watch**: If you set `WATCH_ADDRESS`, every transaction touching that account triggers an alert with signature and Solscan link.
   - **Slot watch**: If you don’t set an address, the sentry watches slot height and alerts when it jumps by more than a threshold (e.g. reorg or catch-up).
+- **Watches Ethereum (EVM)** (optional): Set `RPC_URL_ETH` to enable.
+  - **Address watch**: If you set `WATCH_ADDRESS_ETH`, every incoming/outgoing tx for that address is alerted (with Etherscan/block explorer link).
+  - **Block watch**: If you don’t set an address, the sentry watches block number and alerts on large jumps (reorg/catch-up).
+  - Works with any EVM chain (Ethereum mainnet, Base, Arbitrum, etc.) by setting the right RPC and explorer URLs.
 - **Sends alerts** via:
   - **OpenClaw** (`openclaw message send`) so messages appear in your configured channel (Telegram, WhatsApp, Discord, etc.).
   - **Optional webhook** (e.g. Discord/Slack) for testing without OpenClaw.
@@ -31,8 +35,9 @@ You should see:
 
 ```
 [sentry] On-Chain Sentry started
-[sentry] RPC: https://api.devnet.solana.com
 [sentry] OpenClaw target: set
+[sentry] Solana RPC: https://api.devnet.solana.com
+[sentry] Ethereum RPC: https://eth.llamarpc.com   # only if RPC_URL_ETH is set
 [sentry] Watching address: <your WATCH_ADDRESS>
 ```
 
@@ -42,12 +47,20 @@ If OpenClaw or webhook is set, a startup ping is sent. New activity (or slot jum
 
 | Variable | Description |
 |----------|-------------|
+| **Solana** | |
 | `RPC_URL` | Solana RPC URL. Default: `https://api.devnet.solana.com`. Use a mainnet RPC (e.g. Helius) for production. |
 | `WATCH_ADDRESS` | Optional. Solana public key to watch; every tx touching it is alerted. |
+| `SLOT_JUMP_THRESHOLD` | Alert when Solana slot advances by more than this (default: 20). |
+| **Ethereum (EVM)** | Set `RPC_URL_ETH` to enable. |
+| `RPC_URL_ETH` | Ethereum/EVM RPC URL (e.g. `https://eth.llamarpc.com`, `https://mainnet.base.org`). Omit to disable Ethereum. |
+| `WATCH_ADDRESS_ETH` | Optional. Ethereum address (0x...) to watch; every in/out tx is alerted. |
+| `ETH_EXPLORER_TX` | Block explorer tx URL (default: `https://etherscan.io/tx`). Use `https://basescan.org/tx` for Base, etc. |
+| `ETH_EXPLORER_BLOCK` | Block explorer block URL (default: `https://etherscan.io/block`). |
+| `ETH_BLOCK_JUMP_THRESHOLD` | Alert when Ethereum block number jumps by more than this (default: 20). |
+| **Alerts** | |
 | `OPENCLAW_ALERT_TARGET` | OpenClaw recipient (e.g. Telegram chat id). Required for delivery to OpenClaw channels. |
 | `ALERT_WEBHOOK_URL` | Optional. Discord or Slack webhook URL for testing without OpenClaw. |
-| `POLL_INTERVAL_MS` | Poll interval in ms (default: 15000). |
-| `SLOT_JUMP_THRESHOLD` | Alert when slot advances by more than this (default: 20). |
+| `POLL_INTERVAL_MS` | Poll interval in ms for all chains (default: 15000). |
 
 ## OpenClaw integration
 
@@ -82,12 +95,12 @@ nohup npm start > sentry.log 2>&1 &
 ```
 on-chain-sentry/
 ├── src/
-│   ├── index.ts    # Entry: loads config, starts watcher
-│   ├── watcher.ts  # Polls Solana (address or slot), emits events
-│   └── notify.ts   # Sends alerts via OpenClaw CLI or webhook
-├── skills/
-│   └── on-chain-sentry/
-│       └── SKILL.md   # OpenClaw skill for “what is sentry / how to configure”
+│   ├── index.ts           # Entry: loads config, starts Solana + optional Ethereum watchers
+│   ├── watcher.ts         # Solana: address or slot watch
+│   ├── watcher-ethereum.ts # Ethereum/EVM: address or block watch
+│   └── notify.ts          # Sends alerts via OpenClaw CLI or webhook
+├── skills/on-chain-sentry/
+│   └── SKILL.md           # OpenClaw skill for “what is sentry / how to configure”
 ├── .env.example
 ├── package.json
 └── README.md

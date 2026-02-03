@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.98.4",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
