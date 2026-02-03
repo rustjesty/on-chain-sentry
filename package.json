@@ -1,7 +1,7 @@
 {
   "name": "on-chain-sentry",
   "version": "1.0.0",
-  "description": "OpenClaw on-chain sentry: watch Solana and alert via OpenClaw (WhatsApp, Telegram, etc.)",
+  "description": "OpenClaw on-chain sentry: watch Solana + Ethereum and alert via OpenClaw (WhatsApp, Telegram, etc.)",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
