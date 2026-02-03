@@ -11,6 +11,7 @@ const POLL_INTERVAL_MS = Number(process.env.POLL_INTERVAL_MS) || 15_000;
 const BLOCK_JUMP_THRESHOLD = Number(process.env.ETH_BLOCK_JUMP_THRESHOLD) || 20;
 const EXPLORER_TX = process.env.ETH_EXPLORER_TX || "https://etherscan.io/tx";
 const EXPLORER_BLOCK = process.env.ETH_EXPLORER_BLOCK || "https://etherscan.io/block";
+const CHAIN_NAME = process.env.ETH_CHAIN_NAME || "Ethereum";
 
 let lastBlockNumber = 0;
 let lastSeenTxHash: string | null = null;
@@ -29,7 +30,7 @@ export function startEthereumWatcher(provider: JsonRpcProvider): void {
 }
 
 async function watchAddressActivity(provider: JsonRpcProvider, address: string): Promise<void> {
-  console.log("[sentry][eth] Watching address:", address);
+  console.log(`[sentry][evm] ${CHAIN_NAME} watching address:`, address);
 
   const poll = async () => {
     try {
@@ -64,7 +65,7 @@ async function watchAddressActivity(provider: JsonRpcProvider, address: string):
           const direction = from === address ? "out" : "in";
 
           await sendAlert({
-            title: "Ethereum: activity on watched address",
+            title: `${CHAIN_NAME}: activity on watched address`,
             body: `Tx: \`${tx.hash.slice(0, 18)}...\`\nBlock: ${b}\nDirection: ${direction}\nValue: ${valueEth} ETH`,
             severity: "info",
             link: `${EXPLORER_TX}/${tx.hash}`,
@@ -82,7 +83,7 @@ async function watchAddressActivity(provider: JsonRpcProvider, address: string):
 }
 
 async function watchBlockHeight(provider: JsonRpcProvider): Promise<void> {
-  console.log("[sentry][eth] Watching block height (no WATCH_ADDRESS_ETH). Set WATCH_ADDRESS_ETH for per-account alerts.");
+  console.log(`[sentry][evm] ${CHAIN_NAME} watching block height (no WATCH_ADDRESS_ETH). Set WATCH_ADDRESS_ETH for per-account alerts.`);
 
   const poll = async () => {
     try {
@@ -98,7 +99,7 @@ async function watchBlockHeight(provider: JsonRpcProvider): Promise<void> {
 
       if (delta > BLOCK_JUMP_THRESHOLD) {
         await sendAlert({
-          title: "Ethereum: block jump",
+          title: `${CHAIN_NAME}: block jump`,
           body: `Block advanced by ${delta} (${blockNumber - delta} → ${blockNumber}). Possible chain catch-up or reorg.`,
           severity: "info",
           link: `${EXPLORER_BLOCK}/${blockNumber}`,

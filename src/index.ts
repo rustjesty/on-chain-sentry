@@ -18,6 +18,7 @@ import { sendAlert } from "./notify.js";
 
 const RPC_URL = process.env.RPC_URL || "https://api.devnet.solana.com";
 const RPC_URL_ETH = process.env.RPC_URL_ETH;
+const ETH_CHAIN_NAME = process.env.ETH_CHAIN_NAME || "Ethereum";
 
 function main() {
   const chains: string[] = [];
@@ -35,8 +36,8 @@ function main() {
   // Ethereum (EVM) — optional
   if (RPC_URL_ETH) {
     const provider = new JsonRpcProvider(RPC_URL_ETH);
-    console.log("[sentry] Ethereum RPC:", RPC_URL_ETH);
-    chains.push(`Ethereum: ${process.env.WATCH_ADDRESS_ETH || "block height"}`);
+    console.log(`[sentry] ${ETH_CHAIN_NAME} RPC:`, RPC_URL_ETH);
+    chains.push(`${ETH_CHAIN_NAME}: ${process.env.WATCH_ADDRESS_ETH || "block height"}`);
     startEthereumWatcher(provider);
   }
 
