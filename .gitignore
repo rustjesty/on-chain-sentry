@@ -1,4 +1,9 @@
+# Dependencies and build
 node_modules/
 dist/
+
+# Secrets and local config
 .env
+
+# Logs
 *.log
